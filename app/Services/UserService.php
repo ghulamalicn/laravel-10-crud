@@ -14,9 +14,9 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function getAllUsers($sortField)
+    public function getAllUsers($sortField, $sortOrder = 'asc')
     {
-        return $this->userRepository->getAllUsers($sortField);
+        return $this->userRepository->getAllUsers($sortField, $sortOrder);
     }
 
     public function getUserById($userId)

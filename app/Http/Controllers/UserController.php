@@ -15,9 +15,10 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $sortField = $request->query('sort', 'name');
-        $users = $this->userService->getAllUsers($sortField);
+        $sortOrder = $request->query('sortOrder', 'asc');
+        $users = $this->userService->getAllUsers($sortField,$sortOrder);
 
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users','sortField', 'sortOrder'));
     }
 
     public function show($id)

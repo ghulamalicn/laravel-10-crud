@@ -7,10 +7,9 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function getAllUsers($sortField)
+    public function getAllUsers($sortField, $sortOrder = 'asc')
     {
-        // return User::all();
-        return User::orderBy($sortField)->simplePaginate(3);
+        return User::orderBy($sortField, $sortOrder)->simplePaginate(3);
     }
 
     public function getUserById($userId)
