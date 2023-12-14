@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Role extends Model
 {
     // Model factories are used for seeding databases with test data,
     use HasFactory; //trait
@@ -19,7 +19,7 @@ class Post extends Model
         'name',
         'description',
     ];
-    
+
     // relation with users model
     public function users()
     {
