@@ -9,7 +9,7 @@ class UserRepository
 {
     public function getAllUsers($sortField, $sortOrder = 'asc')
     {
-        return User::orderBy($sortField, $sortOrder)->simplePaginate(3);
+        return User::orderBy($sortField, $sortOrder)->simplePaginate(7);
     }
 
     public function getUserById($userId)

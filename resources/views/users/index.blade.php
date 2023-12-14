@@ -5,12 +5,13 @@
 @section('content')
     <div class="container">
         <h1>Users</h1>
-        
+
         <table class="table">
             <thead>
                 <tr>
-                    <th><a href="{{ route('users.index', ['sort' => 'firstName', 'sortOrder' => ($sortField == 'firstName' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">First Name</a></th>
-                    <th><a href="{{ route('users.index', ['sort' => 'lastName', 'sortOrder' => ($sortField == 'lastName' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">Last Name</a></th>
+                    <th><a href="{{ route('users.index', ['sort' => 'user_name', 'sortOrder' => ($sortField == 'user_name' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">User Name</a></th>
+                    <th><a href="{{ route('users.index', ['sort' => 'first_name', 'sortOrder' => ($sortField == 'first_name' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">First Name</a></th>
+                    <th><a href="{{ route('users.index', ['sort' => 'last_name', 'sortOrder' => ($sortField == 'last_name' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">Last Name</a></th>
                     <th><a href="{{ route('users.index', ['sort' => 'email', 'sortOrder' => ($sortField == 'email' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">Email</a></th>
                     <th><a href="{{ route('users.index', ['sort' => 'phone', 'sortOrder' => ($sortField == 'phone' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">Phone</a></th>
                     <th><a href="{{ route('users.index', ['sort' => 'dob', 'sortOrder' => ($sortField == 'dob' && $sortOrder == 'asc') ? 'desc' : 'asc']) }}">Date Of Birth</a></th>
@@ -20,8 +21,9 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td>{{ $user->firstName }}</td>
-                        <td>{{ $user->lastName }}</td>
+                        <td>{{ $user->user_name }}</td>
+                        <td>{{ $user->first_name }}</td>
+                        <td>{{ $user->last_name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->dob }}</td>

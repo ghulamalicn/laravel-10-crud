@@ -19,7 +19,11 @@ Route::get('/', function () {
 Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
-Route::get('/login', function () {
+Route::get('/ls', function () {
     return view('login-signup');
-})->name('login');
+})->name('ls');
 Route::resource('users', UserController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

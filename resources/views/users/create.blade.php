@@ -12,18 +12,27 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" class="form-control @error('firstName') is-invalid @enderror" value="{{ old('firstName') }}">
-                        @error('firstName')
+                        <label for="user_name">User Name</label>
+                        <input type="text" name="user_name" class="form-control @error('user_name') is-invalid @enderror" value="{{ old('user_name') }}">
+                        @error('user_name')
                             <span class="invalid-feedback" role="alert">
                                 {{ $message }}
                             </span>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" name="lastName" class="form-control @error('lastName') is-invalid @enderror" value="{{ old('lastName') }}">
-                        @error('lastName')
+                        <label for="first_name">First Name</label>
+                        <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ old('first_name') }}">
+                        @error('first_name')
+                            <span class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ old('last_name') }}">
+                        @error('last_name')
                             <span class="invalid-feedback" role="alert">
                                 {{ $message }}
                             </span>

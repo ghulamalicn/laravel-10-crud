@@ -15,8 +15,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $sortField = $request->query('sort', 'name');
-        $sortOrder = $request->query('sortOrder', 'asc');
+        $sortField = $request->query('sort', 'id');
+        $sortOrder = $request->query('sortOrder', 'desc');
         $users = $this->userService->getAllUsers($sortField,$sortOrder);
 
         return view('users.index', compact('users','sortField', 'sortOrder'));
@@ -36,11 +36,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'firstName' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
-            'lastName' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+            'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')],
+            'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+            'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
             'email' => ['required', 'email', Rule::unique('users')],
             'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-            'dob' => ['required', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+            'dob' => ['required','regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:4'],
         ]);
         $userData = $request->all();
@@ -57,11 +58,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'firstName' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
-            'lastName' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+            'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
+            'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+            'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
             'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
             'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-            'dob' => ['required', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+            'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
         ]);
         $userData = $request->all();
         $this->userService->updateUser($id, $userData);

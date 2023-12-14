@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.default')
 
 @section('content')
     <section>
@@ -37,5 +37,10 @@
             </div>
         </div>
     </section>
-    <script src="{{ asset('frontend/assets/js/login-signup.js')}}"></script>
+    <script>
+        const toggleForm = () => {
+            const container = document.querySelector('.container');
+            container.classList.toggle('active');
+        };
+    </script>
 @endsection
