@@ -16,14 +16,16 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/profile', function () {
-    return view('profile');
-})->name('profile');
 Route::get('/ls', function () {
     return view('login-signup');
 })->name('ls');
-Route::resource('users', UserController::class);
+Route::group(['middleware' => 'web'], function () {
+    Route::resource('users', UserController::class);
+    Route::get('/profile', function () {
+        return view('profile');
+    })->name('profile');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
