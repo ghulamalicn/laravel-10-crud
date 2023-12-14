@@ -13,7 +13,38 @@
 
 </head>
 <body>
-
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('users/create') ? 'active' : '' }}" href="{{ route('users.create') }}">Create User</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('profile') ? 'active' : '' }}" href="{{ route('profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        @auth
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a class="nav-link" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Logout</a>
+                            </form>
+                        @else
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        @endauth
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- end navbar -->
     @yield('content')
     <!-- Bootstrap JS and dependencies -->
     <!--

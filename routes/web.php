@@ -16,4 +16,10 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile');
+Route::get('/login', function () {
+    return view('login-signup');
+})->name('login');
 Route::resource('users', UserController::class);
