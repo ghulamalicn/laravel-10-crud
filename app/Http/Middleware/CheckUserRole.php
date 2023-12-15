@@ -26,7 +26,7 @@ class CheckUserRole
                 }
             }elseif($user){
                  // Check if the current route is neither the login nor register route to avoid a loop
-                 if ($request->routeIs(['logout'])) {
+                 if ($request->routeIs(['logout','profile-update'])) {
                     // return redirect()->route('login'); // Redirect to the login screen
                     return $next($request);
                 }

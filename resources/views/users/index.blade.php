@@ -53,3 +53,13 @@
         {{ $users->links() }}
     </div>
 @endsection
+@push('scripts')
+    <script>
+        // Remove alert messages after 5 seconds
+        $(document).ready(function(){
+            setTimeout(function(){
+                $('.alert').fadeOut();
+            }, 5000);
+        });
+    </script>
+@endpush

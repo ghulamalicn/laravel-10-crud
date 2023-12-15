@@ -103,6 +103,7 @@ class UserController extends Controller
         }
     }
 
+
     /**
      * Delete user.
      * by a id
@@ -117,6 +118,28 @@ class UserController extends Controller
         }
     }
 
+        /**
+     * User Profile Update.
+    */
+    public function profileUpdate(Request $request, $id)
+    {
+        if($this->userExist($id)){
+            $request->validate([
+                'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
+                'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+                'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+                'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
+                'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
+                'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+            ]);
+            $userData = $request->all();
+            $this->userService->updateUser($id, $userData);
+            return redirect()->route('profile')->with('success', 'User updated Successfully!.');
+        }else{
+            return redirect()->route('profile')->with('error', 'User are not authenticated/login user.');
+        }
+    }
+    
     /**
      * specific user exist or not.
      * by a id
