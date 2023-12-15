@@ -68,7 +68,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="new_password">New Password</label>
+                        <label for="new_password">New Password </label> <span>(Password is optional)</span>
                         <input type="text" name="new_password" class="form-control @error('new_password') is-invalid @enderror" value="{{ old('new_password') }}">
                         @error('new_password')
                             <span class="invalid-feedback" role="alert">
@@ -77,7 +77,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="confirm_password">Confirm Password</label>
+                        <label for="confirm_password">Confirm Password </label> <span>(Password is optional)</span>
                         <input type="text" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" value="{{ old('confirm_password') }}">
                         @error('confirm_password')
                             <span class="invalid-feedback" role="alert">

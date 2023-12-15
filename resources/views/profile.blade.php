@@ -67,7 +67,7 @@
                             @enderror
                         </dd>
                         <dt class="col-sm-3">DOB</dt>
-                        <dd class="col-sm-9">
+                        <dd class="col-sm-9 mb-4">
                             <input type="text" name="dob" class="form-control @error('dob') is-invalid @enderror" value="{{ old('dob', auth()->user()->dob) }}">
                             @error('dob')
                                 <span class="invalid-feedback" role="alert">
@@ -75,7 +75,8 @@
                                 </span>
                             @enderror
                         </dd>
-                        <dt class="col-sm-3">New Password (Optional)</dt>
+                        <span>(Password is optional)</span>
+                        <dt class="col-sm-3">New Password</dt>
                         <dd class="col-sm-9">
                             <input type="text" name="new_password" class="form-control @error('new_password') is-invalid @enderror" value="{{ old('new_password') }}">
                             @error('new_password')
