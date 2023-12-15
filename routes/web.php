@@ -19,14 +19,14 @@ Route::get('/', function () {
 Route::get('/ls', function () {
     return view('login-signup');
 })->name('ls');
-Route::group(['middleware' => 'web'], function () {
+Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('users', UserController::class);
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
+
 });
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::put('/profile-update/{id}/', [App\Http\Controllers\UserController::class, 'profileUpdate'])->name('profile-update');
 
 Auth::routes();
-

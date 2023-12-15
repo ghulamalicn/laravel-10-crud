@@ -59,7 +59,7 @@ class LoginController extends Controller
         // Authentication failed
         return back()->withErrors(['user_name' => 'Invalid credentials']);
     }
-    
+
     /**
          * Logout trait
          *

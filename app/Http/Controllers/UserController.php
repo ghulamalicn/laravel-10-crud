@@ -63,7 +63,7 @@ class UserController extends Controller
         ]);
         $userData = $request->all();
         $this->userService->createUser($userData);
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'User Created Successfully!.');
     }
 
     /**
@@ -139,7 +139,7 @@ class UserController extends Controller
             return redirect()->route('profile')->with('error', 'User are not authenticated/login user.');
         }
     }
-    
+
     /**
      * specific user exist or not.
      * by a id

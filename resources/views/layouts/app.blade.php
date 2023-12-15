@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom-style.css') }}">
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/bootstrap.js'])
 </head>
 <body>
     <div id="app">
