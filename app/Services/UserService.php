@@ -16,9 +16,9 @@ class UserService
     /**
      * show all users on the base of sorting and pagination.
     */
-    public function getAllUsers($sortField, $sortOrder = 'asc')
+    public function getAllUsers($sortField, $sortOrder = 'asc', $search = [])
     {
-        return $this->userRepository->getAllUsers($sortField, $sortOrder);
+        return $this->userRepository->getAllUsers($sortField, $sortOrder, $search);
     }
 
     /**

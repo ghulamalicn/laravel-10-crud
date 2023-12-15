@@ -21,9 +21,26 @@ class UserController extends Controller
     {
         $sortField = $request->query('sort', 'id');
         $sortOrder = $request->query('sortOrder', 'desc');
-        $users = $this->userService->getAllUsers($sortField,$sortOrder);
+        $search = $request->query('search');
+        /**
+         * (?![^<>?/]*\s{2}) ensures there are no double spaces.
+         *   [^<>?/]* allows any characters except <, >, ?, and /.
+         *   (?<!--)$$ ensures there are no consecutive hyphens.
+         *   (?<!__)$$ ensures there are no consecutive underscores.
+         *   (?<!\*)$$ ensures there is no asterisk.
+         *   (?<!<|>)$$ ensures there is no < or >.
+         *   (?i)(?!script|select|delete|insert|update) disallows the specified keywords (case-insensitive).
+         */
+        $request->validate([
+            'search' => [
+                'nullable',
+                'regex:#^(?![^<>?/]*\s{2})[^<>?/]*(?<!--)$$[^<>?/]*(?<!__)$$[^<>?/]*(?<!\*)$$[^<>?/]*(?!<|>)$$(?i)(?!script|select|delete|insert|update)#',
+            ],
+        ]);
 
-        return view('users.index', compact('users','sortField', 'sortOrder'));
+        $users = $this->userService->getAllUsers($sortField,$sortOrder,$search);
+
+        return view('users.index', compact('users','sortField', 'sortOrder', 'search'));
     }
 
     /**

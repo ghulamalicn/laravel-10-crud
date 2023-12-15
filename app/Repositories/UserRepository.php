@@ -6,9 +6,24 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function getAllUsers($sortField, $sortOrder = 'asc')
+    public function getAllUsers($sortField, $sortOrder = 'asc', $search = [])
     {
-        return User::orderBy($sortField, $sortOrder)->simplePaginate(7);
+        $query = User::orderBy($sortField, $sortOrder);
+        $searchTerms = explode(' ', $search);
+        // Apply search if provided
+        if (!empty($searchTerms)) {
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $value) {
+                    $q->orWhere('user_name', 'like', '%' . $value . '%')
+                      ->orWhere('first_name', 'like', '%' . $value . '%')
+                      ->orWhere('last_name', 'like', '%' . $value . '%')
+                      ->orWhere('email', 'like', '%' . $value . '%')
+                      ->orWhere('phone', 'like', '%' . $value . '%')
+                      ->orWhere('dob', 'like', '%' . $value . '%');
+                }
+            });
+        }
+        return $query->simplePaginate(7);
     }
 
     /**
