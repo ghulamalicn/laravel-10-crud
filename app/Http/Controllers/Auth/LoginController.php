@@ -53,7 +53,20 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Authentication passed
-            return redirect()->intended('/home');
+            // return redirect()->intended('/home');
+             // Authentication passed
+
+            // Check the user's role after authentication
+            $user = Auth::user();
+
+            // Redirect based on the user's role
+            if ($user && $user->roles()->where('role_id', 1)->exists()) {
+                return redirect()->route('users.index');
+            }elseif($user && $user->roles()->where('role_id', 2)->exists()) {
+                return redirect()->route('profile');
+            }else{
+                return redirect()->route('home');
+            }
         }
 
         // Authentication failed

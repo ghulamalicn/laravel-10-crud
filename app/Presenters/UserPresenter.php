@@ -16,30 +16,31 @@
 
         public function formattedDob()
         {
-            // Add any date formatting logic you need
-            // Check if dob is a string and convert it to a Carbon instance
-            if (is_string($this->user->dob)) {
-                $dob = new Carbon($this->user->dob);
-            } else {
-                $dob = $this->user->dob;
+            // Check if dob is set and not null
+            if (isset($this->user->dob)) {
+                // Check if dob is a string and convert it to a Carbon instance
+                if (is_string($this->user->dob)) {
+                    $dob = new Carbon($this->user->dob);
+                    // Add any other date formatting logic you need
+                    return $dob->format('Y-m-d');
+                }
             }
 
-            // Add any other date formatting logic you need
-            return $dob->format('Y-m-d');
+            // Return an empty string or handle the case as needed
+            return '';
         }
 
-        // Convert the first_name to title case
+        // Convert the specified column to title case
         public function formattedNameStr($column)
         {
-            // Convert the first_name to title case
-            // Ensure the specified column exists in the user model
-            if (isset($this->user->{$column})) {
+            // Ensure the specified column exists in the user model and is not null
+            if (isset($this->user->{$column}) && !is_null($this->user->{$column})) {
                 // Convert the column value to title case
                 return Str::title($this->user->{$column});
             }
 
-            // Return the original value if the column is not found
-            return $this->user->{$column};
+            // Return an empty string or handle the case as needed
+            return '';
         }
 
 

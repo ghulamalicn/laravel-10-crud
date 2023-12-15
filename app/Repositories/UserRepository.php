@@ -4,28 +4,39 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\Role;
-
+use Illuminate\Support\Facades\Auth;
 class UserRepository
 {
+    /**
+     * All users record.
+    */
     public function getAllUsers($sortField, $sortOrder = 'asc', $search = [])
     {
+        $perPage = 5; // Adjust the number of users per page as needed
+
         $query = User::orderBy($sortField, $sortOrder);
-        $searchTerms = explode(' ', $search);
+
+        // Exclude the currently logged-in user
+        $query->where('id', '!=', Auth::id());
+
         // Apply search if provided
-        if (!empty($searchTerms)) {
+        if (!empty($search)) {
+            $searchTerms = explode(' ', $search);
             $query->where(function ($q) use ($searchTerms) {
                 foreach ($searchTerms as $value) {
                     $q->orWhere('user_name', 'like', '%' . $value . '%')
-                      ->orWhere('first_name', 'like', '%' . $value . '%')
-                      ->orWhere('last_name', 'like', '%' . $value . '%')
-                      ->orWhere('email', 'like', '%' . $value . '%')
-                      ->orWhere('phone', 'like', '%' . $value . '%')
-                      ->orWhere('dob', 'like', '%' . $value . '%');
+                        ->orWhere('first_name', 'like', '%' . $value . '%')
+                        ->orWhere('last_name', 'like', '%' . $value . '%')
+                        ->orWhere('email', 'like', '%' . $value . '%')
+                        ->orWhere('phone', 'like', '%' . $value . '%')
+                        ->orWhere('dob', 'like', '%' . $value . '%');
                 }
             });
         }
-        return $query->paginate(5)->fragment('users');
+
+        return $query->paginate($perPage)->fragment('users');
     }
+
 
     /**
      * Details of a specific user.
