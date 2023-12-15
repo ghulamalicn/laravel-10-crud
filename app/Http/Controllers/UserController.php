@@ -67,7 +67,7 @@ class UserController extends Controller
     /**
      * Create  a new user.
     */
-    public function store(Request $reques )
+    public function store(Request $request)
     {
         $request->validate([
             'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')],
@@ -171,5 +171,10 @@ class UserController extends Controller
         }else{
             return true;
         }
+    }
+
+    private function presentUser(User $user)
+    {
+        return $user->presenter();
     }
 }

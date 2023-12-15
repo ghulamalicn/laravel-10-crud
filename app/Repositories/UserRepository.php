@@ -23,7 +23,7 @@ class UserRepository
                 }
             });
         }
-        return $query->simplePaginate(7);
+        return $query->paginate(5)->fragment('users');
     }
 
     /**
