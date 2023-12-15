@@ -103,22 +103,43 @@ class UserController extends Controller
     */
     public function update(Request $request, $id)
     {
-        if($this->userExist($id)){
-            $request->validate([
+        if ($this->userExist($id)) {
+            // Define the validation rules with conditional password validation
+            $validationRules = [
                 'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
                 'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
                 'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
                 'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
-            ]);
-            $userData = $request->all();
+            ];
+
+            // Check if new_password is present and add password validation rules
+            if ($request->filled('new_password') || $request->filled('confirm_password')) {
+                $validationRules['new_password'] = ['required', 'string', 'min:4'];
+                $validationRules['confirm_password'] = ['required', 'string', 'min:4', 'same:new_password'];
+            }
+
+            // Validate the request data
+            $request->validate($validationRules);
+
+            // Prepare the user data for update
+            $userData = $request->only(['user_name', 'first_name', 'last_name', 'email', 'phone', 'dob']);
+
+            // Update the password only if new_password is present
+            if ($request->filled('new_password')) {
+                $userData['password'] = bcrypt($request->input('new_password'));
+            }
+
+            // Update the user
             $this->userService->updateUser($id, $userData);
-            return redirect()->route('users.index')->with('success', 'User updated Successfully!.');
-        }else{
+
+            return redirect()->route('users.index')->with('success', 'User updated Successfully!');
+        } else {
             return redirect()->route('users.index')->with('error', 'User not found.');
         }
     }
+
 
 
     /**
@@ -135,27 +156,47 @@ class UserController extends Controller
         }
     }
 
-        /**
+    /**
      * User Profile Update.
     */
     public function profileUpdate(Request $request, $id)
     {
-        if($this->userExist($id)){
-            $request->validate([
+        if ($this->userExist($id)) {
+            $validationRules = [
                 'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
                 'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
                 'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
                 'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
-            ]);
-            $userData = $request->all();
+            ];
+
+            // Check if new_password is present and add password validation rules
+            if ($request->filled('new_password') || $request->filled('confirm_password')) {
+                $validationRules['new_password'] = ['required', 'string', 'min:4'];
+                $validationRules['confirm_password'] = ['required', 'string', 'min:4', 'same:new_password'];
+            }
+
+            // Validate the request data
+            $request->validate($validationRules);
+
+            // Prepare the user data for update
+            $userData = $request->only(['user_name', 'first_name', 'last_name', 'email', 'phone', 'dob']);
+
+            // Update the password only if new_password is present
+            if ($request->filled('new_password')) {
+                $userData['password'] = bcrypt($request->input('new_password'));
+            }
+
+            // Update the user
             $this->userService->updateUser($id, $userData);
-            return redirect()->route('profile')->with('success', 'User updated Successfully!.');
-        }else{
-            return redirect()->route('profile')->with('error', 'User are not authenticated/login user.');
+
+            return redirect()->route('profile')->with('success', 'Profile updated Successfully!');
+        } else {
+            return redirect()->route('profile')->with('error', 'User is not authenticated/login user.');
         }
     }
+
 
     /**
      * specific user exist or not.

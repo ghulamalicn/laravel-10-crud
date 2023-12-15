@@ -75,6 +75,24 @@
                                 </span>
                             @enderror
                         </dd>
+                        <dt class="col-sm-3">New Password (Optional)</dt>
+                        <dd class="col-sm-9">
+                            <input type="text" name="new_password" class="form-control @error('new_password') is-invalid @enderror" value="{{ old('new_password') }}">
+                            @error('new_password')
+                                <span class="invalid-feedback" role="alert">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </dd>
+                        <dt class="col-sm-3">Confirm Password</dt>
+                        <dd class="col-sm-9">
+                            <input type="text" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" value="{{ old('confirm_password') }}">
+                            @error('confirm_password')
+                                <span class="invalid-feedback" role="alert">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </dd>
 
 
 

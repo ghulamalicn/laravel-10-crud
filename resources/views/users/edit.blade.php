@@ -67,6 +67,24 @@
                             </span>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="text" name="new_password" class="form-control @error('new_password') is-invalid @enderror" value="{{ old('new_password') }}">
+                        @error('new_password')
+                            <span class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="text" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" value="{{ old('confirm_password') }}">
+                        @error('confirm_password')
+                            <span class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
                     <!-- Repeat the same structure for other fields -->
 
                     <button type="submit" class="btn btn-primary">Update User</button>
