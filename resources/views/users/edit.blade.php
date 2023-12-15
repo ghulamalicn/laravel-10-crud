@@ -11,7 +11,6 @@
                 <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-
                     <div class="form-group">
                         <label for="user_name">User Name</label>
                         <input type="text" name="user_name" class="form-control @error('user_name') is-invalid @enderror" value="{{ old('user_name', $user->user_name) }}">
@@ -85,7 +84,21 @@
                             </span>
                         @enderror
                     </div>
-                    <!-- Repeat the same structure for other fields -->
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select name="role" class="form-control @error('role') is-invalid @enderror">
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" {{ ($user->roles->contains('id', $role->id)) ? 'selected' : '' }}>
+                                {{ $role->name }}
+                            </option>
+                        @endforeach
+                        </select>
+                        @error('role')
+                            <span class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
 
                     <button type="submit" class="btn btn-primary">Update User</button>
                     <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>

@@ -56,11 +56,7 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
             'email' => ['required', 'email', Rule::unique('users')],
             'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-            'dob' => [
-                'required',
-                'date_format:Y',
-                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-            ],
+            'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }

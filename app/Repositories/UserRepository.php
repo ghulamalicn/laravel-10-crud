@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Models\Role;
 
 class UserRepository
 {
@@ -32,6 +33,14 @@ class UserRepository
     public function getUserById($userId)
     {
         return User::find($userId);
+    }
+
+    /**
+     * List of all users.
+    */
+    public function getAllRoles()
+    {
+        return Role::orderBy('id', 'desc')->get();
     }
 
     /**

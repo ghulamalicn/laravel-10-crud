@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use Illuminate\Validation\Rule;
+use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
@@ -75,11 +76,7 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
             'email' => ['required', 'email', Rule::unique('users')],
             'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-            'dob' => [
-                'required',
-                'date_format:Y',
-                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-            ],
+            'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:4'],
         ]);
         $userData = $request->all();
@@ -95,7 +92,9 @@ class UserController extends Controller
         // Validate that the user ID exists
         if($this->userExist($id)){
             $user = $this->userService->getUserById($id);
-            return view('users.edit', compact('user'));
+
+            $roles = $this->userService->getAllRoles();
+            return view('users.edit', compact('user','roles'));
         }else{
             return redirect()->route('users.index')->with('error', 'User not found.');
         }
@@ -115,11 +114,8 @@ class UserController extends Controller
                 'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
                 'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-                'dob' => [
-                    'required',
-                    'date_format:Y',
-                    'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-                ],
+                'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+                'role' => ['required', 'integer'],
             ];
 
             // Check if new_password is present and add password validation rules
@@ -142,6 +138,9 @@ class UserController extends Controller
             // Update the user
             $this->userService->updateUser($id, $userData);
 
+            // Update or create the user role
+            $user = $this->userService->getUserById($id);
+            $user->roles()->sync([$request->input('role')]);
             return redirect()->route('users.index')->with('success', 'User updated Successfully!');
         } else {
             return redirect()->route('users.index')->with('error', 'User not found.');
@@ -176,11 +175,7 @@ class UserController extends Controller
                 'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
                 'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
                 'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-                'dob' => [
-                    'required',
-                    'date_format:Y',
-                    'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-                ],
+                'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
 
             ];
 

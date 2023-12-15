@@ -20,13 +20,17 @@ class UserService
     {
         return $this->userRepository->getAllUsers($sortField, $sortOrder, $search);
     }
+    public function getAllRoles()
+    {
+        return $this->userRepository->getAllRoles();
+    }
 
     /**
      * Details of a specific user.
     */
     public function getUserById($userId)
     {
-        return $this->userRepository->getUserById($userId);
+        return $this->userRepository->getUserById($userId)->load('roles');
     }
 
     /**
