@@ -1,5 +1,4 @@
 <?php
-// app/Repositories/UserRepository.php
 
 namespace App\Repositories;
 
@@ -12,16 +11,25 @@ class UserRepository
         return User::orderBy($sortField, $sortOrder)->simplePaginate(7);
     }
 
+    /**
+     * Details of a specific user.
+    */
     public function getUserById($userId)
     {
         return User::find($userId);
     }
 
+    /**
+     * create a new user.
+    */
     public function createUser($userData)
     {
         return User::create($userData);
     }
 
+    /**
+     * update a specific user.
+    */
     public function updateUser($userId, $userData)
     {
         $user = User::find($userId);
@@ -32,6 +40,9 @@ class UserRepository
         return null;
     }
 
+    /**
+     * delete a specific user.
+    */
     public function deleteUser($userId)
     {
         $user = User::find($userId);

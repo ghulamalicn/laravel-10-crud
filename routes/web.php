@@ -24,8 +24,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/profile', function () {
         return view('profile');
     })->name('profile');
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 

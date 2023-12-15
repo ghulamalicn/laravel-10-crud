@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     protected $userService;
@@ -13,6 +14,9 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * Show users record on the base of sorting and pagination.
+    */
     public function index(Request $request)
     {
         $sortField = $request->query('sort', 'id');
@@ -22,18 +26,31 @@ class UserController extends Controller
         return view('users.index', compact('users','sortField', 'sortOrder'));
     }
 
+    /**
+     * Details of a specific user.
+    */
     public function show($id)
     {
-        $user = $this->userService->getUserById($id);
-        return view('users.show', compact('user'));
+        if($this->userExist($id)){
+            $user = $this->userService->getUserById($id);
+            return view('users.show', compact('user'));
+        }else{
+            return redirect()->route('users.index')->with('error', 'User not found.');
+        }
     }
 
+     /**
+     * New user creation form.
+    */
     public function create()
     {
         return view('users.create');
     }
 
-    public function store(Request $request)
+    /**
+     * Create  a new user.
+    */
+    public function store(Request $reques )
     {
         $request->validate([
             'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')],
@@ -49,30 +66,70 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
+    /**
+     * Edit a user.
+    */
     public function edit($id)
     {
-        $user = $this->userService->getUserById($id);
-        return view('users.edit', compact('user'));
+        // Validate that the user ID exists
+        if($this->userExist($id)){
+            $user = $this->userService->getUserById($id);
+            return view('users.edit', compact('user'));
+        }else{
+            return redirect()->route('users.index')->with('error', 'User not found.');
+        }
     }
 
+
+    /**
+     * Update a specific user.
+    */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
-            'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
-            'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
-            'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
-            'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
-        ]);
-        $userData = $request->all();
-        $this->userService->updateUser($id, $userData);
-        return redirect()->route('users.index');
+        if($this->userExist($id)){
+            $request->validate([
+                'user_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z0-9]+([ -@_][a-zA-Z0-9]+)*$/', Rule::unique('users')->ignore($id)],
+                'first_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+                'last_name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-Z]+([ -][a-zA-Z]+)*$/'],
+                'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
+                'phone' => ['required', 'string', 'regex:/^(?:(?:\+\d{1,3}|\(\d{1,4}\)|\d{1,4})[\s-]?)?(\(\d{3}\)\s?\d{8}|\d{10})$/'],
+                'dob' => ['required', 'date', 'regex:/^(\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$/','before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
+            ]);
+            $userData = $request->all();
+            $this->userService->updateUser($id, $userData);
+            return redirect()->route('users.index')->with('success', 'User updated Successfully!.');
+        }else{
+            return redirect()->route('users.index')->with('error', 'User not found.');
+        }
     }
 
+    /**
+     * Delete user.
+     * by a id
+    */
     public function destroy($id)
     {
-        $this->userService->deleteUser($id);
-        return redirect()->route('users.index');
+        if($this->userExist($id)){
+            $this->userService->deleteUser($id);
+            return redirect()->route('users.index')->with('success', 'User Deleted Successfully!.');
+        }else{
+            return redirect()->route('users.index')->with('error', 'User not found.');
+        }
+    }
+
+    /**
+     * specific user exist or not.
+     * by a id
+    */
+    function userExist($id){
+        $validator = Validator::make(['id' => $id], [
+            'id' => ['required', 'integer', Rule::exists('users', 'id')],
+        ]);
+
+        if ($validator->fails()) {
+            return false;
+        }else{
+            return true;
+        }
     }
 }

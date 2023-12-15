@@ -48,5 +48,10 @@ Start the local development server
 
     php artisan serve
 
+Laravel Mix is commonly used for asset compilation in Laravel applications
+
+   npm run dev
+
+
 You can now access the server at http://localhost:8000
 

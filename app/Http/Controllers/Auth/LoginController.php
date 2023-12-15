@@ -38,6 +38,8 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    // login function on the base of username and password
     public function login(Request $request)
     {
         // Validate the login request
@@ -57,16 +59,17 @@ class LoginController extends Controller
         // Authentication failed
         return back()->withErrors(['user_name' => 'Invalid credentials']);
     }
-     /**
-     * Logout trait
-     *
-     * @author Yugo <dedy.yugo.purwanto@gmail.com>
-     * @param  Request $request
-     * @return void
-     */
+    
+    /**
+         * Logout trait
+         *
+         * @author Yugo <dedy.yugo.purwanto@gmail.com>
+         * @param  Request $request
+         * @return void
+    */
     protected function logout(Request $request)
     {
-        $this->guard()->logout();
+        $this->guard()->logout(); //authentication guard used by the application, like web, api
 
         $request->session()->flush();
 
