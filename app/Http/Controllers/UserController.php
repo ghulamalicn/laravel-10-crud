@@ -6,6 +6,7 @@ use App\Services\UserService;
 use Illuminate\Validation\Rule;
 use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
 class UserController extends Controller
 {
     protected $userService;
@@ -41,7 +42,12 @@ class UserController extends Controller
 
         $users = $this->userService->getAllUsers($sortField,$sortOrder,$search);
 
-        return view('users.index', compact('users','sortField', 'sortOrder', 'search'));
+        return view('users.index', [
+            'users' => $users,
+            'sortField' => $sortField,
+            'sortOrder' => $sortOrder,
+            'search' => $search,
+        ]);
     }
 
     /**
@@ -155,11 +161,21 @@ class UserController extends Controller
     */
     public function destroy($id)
     {
-        if($this->userExist($id)){
+        if ($this->userExist($id)) {
             $this->userService->deleteUser($id);
-            return redirect()->route('users.index')->with('success', 'User Deleted Successfully!.');
-        }else{
-            return redirect()->route('users.index')->with('error', 'User not found.');
+
+            // Return a response with a success message and the deleted user ID
+            return Response::json([
+                'success' => true,
+                'message' => 'User Deleted Successfully!',
+                'deletedUserId' => $id,
+            ]);
+        } else {
+            // Return a response with an error message
+            return Response::json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404);
         }
     }
 
