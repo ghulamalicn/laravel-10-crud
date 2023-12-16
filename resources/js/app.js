@@ -7,6 +7,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import UserList from './components/UserList.vue';
+import UserForm from './components/UserForm.vue';
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
@@ -15,6 +16,7 @@ import UserList from './components/UserList.vue';
 
 const app = createApp({});
 app.component('user-list', UserList);
+app.component('user-form', UserForm);
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 
